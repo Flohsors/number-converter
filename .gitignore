@@ -1,0 +1,58 @@
+# maven
+target/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+atlassin-ide-plugin.xml
+
+
+# Eclipse
+**/.classpath
+**/.projects
+**/.project
+**/.settings/
+**/.metadata
+**/.springBeans
+
+#Mac
+.DS_Store
+._.DS_Store
+
+# java
+*.class
+*.jar
+*.war
+*.ear
+
+# stuff
+hs_err_pid*
+
+# emacs
+*~
+
+# kde
+.directory
+/doc/tasks.open
+
+#mduml
+#*.mdr
+#*.mdzip
+*.mdr.bak
+*.mdzip.bak
+
+# remove my tests
+gatling-results/
+out/
+
+aws/
+
+#AspectJ
+ajcore*
+
+# Keep the Maven wrapper
+!.mvn/wrapper/maven-wrapper.jar
+
+#logs
+*.log
