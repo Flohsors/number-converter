@@ -11,9 +11,8 @@ This application converts input numbers between various formats. Currently suppo
 ## Table of Contents
 
 1. [Technologies](#technologies)
-2. [Architecture](#architecture)
-3. [Running the Application locally](#running-the-application-locally)
-4. [Notes](#notes)
+2. [Running the Application locally](#running-the-application-locally)
+3. [Notes](#notes)
 
 <br>
 
@@ -23,9 +22,6 @@ Below is a quick overview of the technologies used:
 
 - Java 8
 - Spring Boot 2.1.8
-- Spring Integration
-
-## Architecture
 
 ## Running the Application locally
 
