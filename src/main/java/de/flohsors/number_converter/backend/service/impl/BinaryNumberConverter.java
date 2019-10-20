@@ -1,5 +1,8 @@
 package de.flohsors.number_converter.backend.service.impl;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class BinaryNumberConverter {
 
     public int convertBinaryToDecimal(final String binaryNumber) {

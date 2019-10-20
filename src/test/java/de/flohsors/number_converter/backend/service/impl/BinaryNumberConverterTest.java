@@ -9,12 +9,12 @@ public class BinaryNumberConverterTest {
     private BinaryNumberConverter binaryNumberConverter = new BinaryNumberConverter();
 
     @Test
-    public void simpleConversion_10is2() {
+    public void simpleConversion_Binary10is2Decimal() {
         assertThat(binaryNumberConverter.convertBinaryToDecimal("10")).isEqualTo(2);
     }
 
     @Test
-    public void simpleConversion_101100is52() {
+    public void simpleConversion_Binary101100is52Decimal() {
         assertThat(binaryNumberConverter.convertBinaryToDecimal("110100")).isEqualTo(52);
     }
 }

@@ -34,6 +34,11 @@ public class NumberConversionController {
         }
 
         final ConvertibleNumber convertibleNumber = new ConvertibleNumber(number);
-        return ResponseEntity.ok(numberConverterService.identifyAndConvertNumber(convertibleNumber));
+        final ConvertibleNumber result = numberConverterService.convertNumber(convertibleNumber);
+        if (result == null) {
+            return ResponseEntity.badRequest().body(convertibleNumber);
+        }
+
+        return ResponseEntity.ok(result);
     }
 }

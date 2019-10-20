@@ -1,5 +1,6 @@
 package de.flohsors.number_converter.rest.controller;
 
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +40,15 @@ public class NumberConversionControllerIT {
     @Test
     public void requestConversion_returnsCorrectlyConvertedNumber_whenParametersAreProvided() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/converter").contentType(
-                    "application/json").content("TEST")).andReturn();
+                                                   "application/json").content("101100")).andReturn();
+
         assertThat(mvcResult.getResponse().getStatus()).isEqualTo(SC_OK);
+    }
+
+    @Test
+    public void requestConversion_resultsInException_onIncompatibleInput() throws Exception {
+        final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/converter").contentType(
+                    "application/json").content("TEST")).andReturn();
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(SC_BAD_REQUEST);
     }
 }
