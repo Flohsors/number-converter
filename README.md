@@ -25,4 +25,19 @@ Below is a quick overview of the technologies used:
 
 ## Running the Application locally
 
+To run the application first build it by running
+```
+mvn clean install
+```
+
+The either run the main Application or run on CLI:
+```
+mvn spring-boot:run
+```
+
+In the browser hit
+```
+localhost:8080/home
+```
+
 ## Notes
