@@ -1,5 +1,7 @@
 package de.flohsors.number_converter.rest.controller;
 
+import static java.util.Objects.isNull;
+
 import static org.springframework.util.StringUtils.isEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class NumberConversionController {
         consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ConvertibleNumber> convertNumber(@RequestBody final ConvertibleNumber number) {
-        if (isEmpty(number)) {
+        if (isNull(number) || isEmpty(number.getInputNumber())) {
             return ResponseEntity.badRequest().build();
         }
 

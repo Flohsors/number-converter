@@ -1,3 +1,8 @@
 package de.flohsors.number_converter.backend.service;
 
-public interface ConversionHistoryService { }
+import de.flohsors.number_converter.rest.resource.ConvertibleNumber;
+
+public interface ConversionHistoryService {
+
+    void writeConversionLog(ConvertibleNumber input, ConvertibleNumber output);
+}

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import de.flohsors.number_converter.backend.service.ConversionHistoryService;
 import de.flohsors.number_converter.backend.service.NumberConverterService;
 import de.flohsors.number_converter.rest.resource.ConvertibleNumber;
 
@@ -30,13 +31,16 @@ public class NumberConverterServiceImpl implements NumberConverterService {
     private NumberVerifier numberVerifier;
     private BinaryNumberConverter binaryNumberConverter;
     private RomanNumberConverter romanNumberConverter;
+    private ConversionHistoryService conversionHistoryService;
 
     @Autowired
     public NumberConverterServiceImpl(final NumberVerifier numberVerifier,
-            final BinaryNumberConverter binaryNumberConverter, final RomanNumberConverter romanNumberConverter) {
+            final BinaryNumberConverter binaryNumberConverter, final RomanNumberConverter romanNumberConverter,
+            final ConversionHistoryService conversionHistoryService) {
         this.numberVerifier = numberVerifier;
         this.binaryNumberConverter = binaryNumberConverter;
         this.romanNumberConverter = romanNumberConverter;
+        this.conversionHistoryService = conversionHistoryService;
     }
 
     @Override
@@ -52,23 +56,27 @@ public class NumberConverterServiceImpl implements NumberConverterService {
         numberVerifier.setNumberType(convertibleNumber);
     }
 
-    private ConvertibleNumber convertToRomanNumber(final ConvertibleNumber convertibleNumber) {
-        if (BINARY == convertibleNumber.getNumberType()) {
-            convertibleNumber.setInputNumber(valueOf(
-                    binaryNumberConverter.convertBinaryToDecimal(convertibleNumber.getInputNumber())));
-            convertibleNumber.setNumberType(DECIMAL);
+    private ConvertibleNumber convertToRomanNumber(final ConvertibleNumber inputNumber) {
+        final ConvertibleNumber outputNumber = new ConvertibleNumber(inputNumber.getInputNumber());
+        outputNumber.setNumberType(inputNumber.getNumberType());
+        if (BINARY == outputNumber.getNumberType()) {
+            outputNumber.setInputNumber(valueOf(
+                    binaryNumberConverter.convertBinaryToDecimal(outputNumber.getInputNumber())));
+            outputNumber.setNumberType(DECIMAL);
         }
 
-        if (DECIMAL == convertibleNumber.getNumberType()) {
-            final String decimalNumber = convertibleNumber.getInputNumber();
+        if (DECIMAL == outputNumber.getNumberType()) {
+            final String decimalNumber = outputNumber.getInputNumber();
             if (isBlank(decimalNumber)) {
                 throw new InvalidParameterException();
             }
 
-            convertibleNumber.setInputNumber(romanNumberConverter.convertDecimalToRomanNumber(
+            outputNumber.setInputNumber(romanNumberConverter.convertDecimalToRomanNumber(
                     Integer.valueOf(decimalNumber)));
-            convertibleNumber.setNumberType(ROMAN);
-            return convertibleNumber;
+            outputNumber.setNumberType(ROMAN);
+
+            conversionHistoryService.writeConversionLog(inputNumber, outputNumber);
+            return outputNumber;
         } else {
             LOGGER.warn("Found a number type that is currently not supported!");
             return null;
