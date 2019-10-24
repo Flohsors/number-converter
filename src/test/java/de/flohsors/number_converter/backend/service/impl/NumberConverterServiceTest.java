@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static de.flohsors.number_converter.backend.entity.NumberType.BINARY;
@@ -16,6 +17,7 @@ import org.junit.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import de.flohsors.number_converter.backend.service.ConversionHistoryService;
 import de.flohsors.number_converter.backend.service.NumberConverterService;
 import de.flohsors.number_converter.rest.resource.ConvertibleNumber;
 
@@ -28,6 +30,7 @@ public class NumberConverterServiceTest {
 
     @Autowired
     private NumberConverterService numberConverterService;
+    private ConversionHistoryService conversionHistoryService;
 
     @Before
     public void setup() {
@@ -37,7 +40,10 @@ public class NumberConverterServiceTest {
         final RomanNumberConverter romConverter = mock(RomanNumberConverter.class);
         when(romConverter.convertDecimalToRomanNumber(eq(DECIMAL_TEST_INT))).thenReturn(ROMAN_TEST_NUMBER);
 
-        numberConverterService = new NumberConverterServiceImpl(mock(NumberVerifier.class), binConverter, romConverter);
+        conversionHistoryService = mock(ConversionHistoryService.class);
+
+        numberConverterService = new NumberConverterServiceImpl(mock(NumberVerifier.class), binConverter, romConverter,
+                conversionHistoryService);
     }
 
     @Test
@@ -49,6 +55,8 @@ public class NumberConverterServiceTest {
 
         assertThat(result.getNumberType()).isEqualTo(ROMAN);
         assertThat(result.getInputNumber()).isEqualTo(ROMAN_TEST_NUMBER);
+
+        verify(conversionHistoryService).writeConversionLog(request, result);
     }
 
     @Test
@@ -60,5 +68,7 @@ public class NumberConverterServiceTest {
 
         assertThat(result.getNumberType()).isEqualTo(ROMAN);
         assertThat(result.getInputNumber()).isEqualTo(ROMAN_TEST_NUMBER);
+
+        verify(conversionHistoryService).writeConversionLog(request, result);
     }
 }

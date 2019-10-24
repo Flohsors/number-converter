@@ -56,9 +56,27 @@ public class NumberConversionControllerIT {
     }
 
     @Test
-    public void requestConversion_resultsInException_onIncompatibleInput() throws Exception {
+    public void requestConversion_returns400_whenTheInputNumberIsInconvertible() throws Exception {
+        final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/converter/convertNumber").contentType(
+                                                   "application/json").content(
+                                                   objectMapper.writeValueAsString(anyUnknownMess()))).andReturn();
+
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(SC_BAD_REQUEST);
+    }
+
+    @Test
+    public void requestConversion_returns400_onWrongInput() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/converter/convertNumber").contentType(
                                                    "application/json").content("TEST")).andReturn();
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(SC_BAD_REQUEST);
+    }
+
+    @Test
+    public void requestConversion_resultsInException_onEmptyInput() throws Exception {
+        final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/converter/convertNumber").contentType(
+                                                   "application/json").content(
+                                                   objectMapper.writeValueAsString(emptyConvertibleNummber())))
+                                           .andReturn();
         assertThat(mvcResult.getResponse().getStatus()).isEqualTo(SC_BAD_REQUEST);
     }
 
@@ -66,5 +84,13 @@ public class NumberConversionControllerIT {
         final ConvertibleNumber convertibleNumber = new ConvertibleNumber("101100");
         convertibleNumber.setNumberType(NumberType.BINARY);
         return convertibleNumber;
+    }
+
+    private ConvertibleNumber anyUnknownMess() {
+        return new ConvertibleNumber("E3G7A");
+    }
+
+    private ConvertibleNumber emptyConvertibleNummber() {
+        return new ConvertibleNumber("");
     }
 }
