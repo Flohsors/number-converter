@@ -13,6 +13,8 @@ public class ConvertibleNumber {
     private String inputNumber;
     private NumberType numberType;
 
+    public ConvertibleNumber() { }
+
     public ConvertibleNumber(final String inputNumber) {
         this.inputNumber = inputNumber;
         numberType = UNKNOWN;

@@ -23,11 +23,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import de.flohsors.number_converter.backend.entity.NumberType;
+import de.flohsors.number_converter.rest.resource.ConvertibleNumber;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class NumberConversionControllerIT {
 
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -39,16 +47,24 @@ public class NumberConversionControllerIT {
 
     @Test
     public void requestConversion_returnsCorrectlyConvertedNumber_whenParametersAreProvided() throws Exception {
-        final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/converter").contentType(
-                                                   "application/json").content("101100")).andReturn();
+        final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/converter/convertNumber").contentType(
+                                                   "application/json").content(
+                                                   objectMapper.writeValueAsString(anyConvertibleNumber())))
+                                           .andReturn();
 
         assertThat(mvcResult.getResponse().getStatus()).isEqualTo(SC_OK);
     }
 
     @Test
     public void requestConversion_resultsInException_onIncompatibleInput() throws Exception {
-        final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/converter").contentType(
-                    "application/json").content("TEST")).andReturn();
+        final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/converter/convertNumber").contentType(
+                                                   "application/json").content("TEST")).andReturn();
         assertThat(mvcResult.getResponse().getStatus()).isEqualTo(SC_BAD_REQUEST);
+    }
+
+    private ConvertibleNumber anyConvertibleNumber() {
+        final ConvertibleNumber convertibleNumber = new ConvertibleNumber("101100");
+        convertibleNumber.setNumberType(NumberType.BINARY);
+        return convertibleNumber;
     }
 }
