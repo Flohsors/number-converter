@@ -28,14 +28,15 @@ public class NumberConversionController {
         value = "/converter/convertNumber", produces = MediaType.APPLICATION_JSON_VALUE,
         consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ConvertibleNumber> convertNumber(@RequestBody final ConvertibleNumber number) {
+    public ResponseEntity<ConvertibleNumber> convertNumber(@RequestBody final String number) {
         if (isEmpty(number)) {
             return ResponseEntity.badRequest().build();
         }
 
-        final ConvertibleNumber result = numberConverterService.convertNumber(number);
+        final ConvertibleNumber input = new ConvertibleNumber(number);
+        final ConvertibleNumber result = numberConverterService.convertNumber(input);
         if (result == null) {
-            return ResponseEntity.badRequest().body(number);
+            return ResponseEntity.badRequest().body(input);
         }
 
         return ResponseEntity.ok(result);
