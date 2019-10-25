@@ -35,9 +35,6 @@ public class NumberConversionControllerIT {
     private MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private WebApplicationContext webApplicationContext;
 
     @Before
@@ -49,7 +46,7 @@ public class NumberConversionControllerIT {
     public void requestConversion_returnsCorrectlyConvertedNumber_whenParametersAreProvided() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/converter/convertNumber").contentType(
                                                    "application/json").content(
-                                                   objectMapper.writeValueAsString(anyConvertibleNumber())))
+                                                   "101100"))
                                            .andReturn();
 
         assertThat(mvcResult.getResponse().getStatus()).isEqualTo(SC_OK);
@@ -62,9 +59,4 @@ public class NumberConversionControllerIT {
         assertThat(mvcResult.getResponse().getStatus()).isEqualTo(SC_BAD_REQUEST);
     }
 
-    private ConvertibleNumber anyConvertibleNumber() {
-        final ConvertibleNumber convertibleNumber = new ConvertibleNumber("101100");
-        convertibleNumber.setNumberType(NumberType.BINARY);
-        return convertibleNumber;
-    }
 }

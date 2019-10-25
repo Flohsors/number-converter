@@ -3,21 +3,40 @@
 <head>
     <meta charset="ISO-8859-1">
     <title>Main Page</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script>
+        $( document ).ready(function() {
+            console.log('starting')
+            $( '#convert_button' ).click(function(){
+                console.log('hello')
+                const number = $( '#input_field' ).val();
+                $.ajax({
+                    url: "http://localhost:8080/converter/convertNumber",
+                    type: "POST",
+                    data: number,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        console.log('success')
+                        $( '#number_output' ).text(data.inputNumber)
+                    }
+                })
+            })
+        });
+    </script>
 </head>
 <body ng-app="demo">
 <hr/>
-<div class="container" ng-controller="numberController">
+<div class="container">
     <div class="row">
-        <label>Number</label> <input type="text" ng-model="convertibleNumber.inputNumber" class="input-sm spacing"/>
-        <button ng-click="convertNumber()" class="btn btn-sm btn-info">Convert Number</button>
+        <label id="number_input">Number</label>
+        <input id="input_field" type="text" class="input-sm spacing"/>
+        <button id="convert_button">Convert Number</button>
+        <label id="number_output">Result</label>
     </div>
 </div>
 </body>
-<script src="js/lib/angular.min.js"></script>
-<script src="js/lib/ui-bootstrap-tpls-2.5.0.min.js"></script>
-<script src="js/app/app.js"></script>
-<script src="js/app/NumberController.js"></script>
-<script src="js/app/NumberService.js"></script>
-<link rel="stylesheet" href="css/lib/bootstrap.min.css"/>
 <link rel="stylesheet" href="css/app/app.css"/>
 </html>
